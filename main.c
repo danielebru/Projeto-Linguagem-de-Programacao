@@ -10,6 +10,46 @@ typedef struct
     char informacoes[100];
 } Documento;
 
+int validarDocumento (Documento d)
+{
+    if (d.tipo < 1 || d.tipo > 5)
+    {
+        printf("Tipo inválido.\n");
+        return 0;
+    }
+
+    int tamanhoNome = strlen(d.nome);
+    if (tamanhoNome < 2)
+    {
+        printf("Nome deve possuir no mínimo 2 caracteres.\n");
+        return 0;
+    }
+
+    if (strlen(d.data) != 10)
+    {
+        printf("Data tem que estar no formato dd/mm/aaaa.\n");
+        return 0;
+    }
+
+    if (d.data[2] != '/' || d.data[5] != '/')
+    {
+        printf("Posição incorreta das barras.\n");
+        return 0;
+    }
+
+    for (int i = 0; i < 10; i++)
+    {
+        if (i == 2 || i == 5)
+            continue;
+if (d.data[i] < '0' || d.data[i] > '9')
+        {
+            printf("Caracteres inválidos.\n");
+            return 0;
+        }
+    }
+    return 1;
+} 
+
 void registrarDocumento()
 {
     Documento d;
@@ -31,6 +71,12 @@ void registrarDocumento()
     printf("Informações:\n");
     fgets(d.informacoes, 100, stdin);
     d.informacoes[strcspn(d.informacoes, "\n")] = '\0';
+
+    if (!validarDocumento(d))
+    {
+        printf("Documento Inválido");
+        return;
+    }
 
     if (d.tipo < 1 || d.tipo > 5)
     {
@@ -101,3 +147,4 @@ int main()
     menu();
     return 0;
 }
+
