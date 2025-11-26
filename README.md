@@ -1,0 +1,1 @@
+Desenvolvimento de um sistema de gestão de documentos em C (Cartório Digital). Tal projeto está sendo construído utilizando os conceitos-base de arquivos, ponteiros, funções, modularização e alocação dinâmica.
