@@ -133,6 +133,8 @@ void menu()
         case 1:
             registrarDocumento();
             break;
+        case 0:printf("Saindo...\n");
+            break;
         default:
             printf("Opção inválida!\n");
         }
@@ -146,5 +148,4 @@ int main()
     menu();
     return 0;
 }
-
 
