@@ -11,6 +11,7 @@ typedef struct
 
 int validarDocumento(Documento d);
 void registrarDocumento();
+//ainda pra ser implementado
 void listarTudo();
 
 #endif
