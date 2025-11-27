@@ -6,10 +6,11 @@ typedef struct
     int tipo;
     char nome[50];
     char data[12];
-    char informacoes[100];
+    char detalhes[100];
 } Documento;
 
 int validarDocumento(Documento d);
+void menu();
 void registrarDocumento();
 //ainda pra ser implementado
 void listarTudo();
