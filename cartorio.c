@@ -8,15 +8,13 @@ Documento lerDocumento()
 {
     Documento d;
 
-    printf("\n========== REGISTRO DE DOCUMENTO ==========\n");
+    printf("REGISTRO\n");
     printf("Tipos disponíveis:\n");
     printf("  1 - Nascimento\n");
     printf("  2 - Óbito\n");
     printf("  3 - Casamento\n");
     printf("  4 - Divórcio\n");
-    printf("  5 - Outros\n");
-    printf("-------------------------------------------\n");
-
+    printf("  5 - Outros Documentos\n");
     printf("Digite o tipo do documento (1-5): ");
     scanf("%d", &d.tipo);
     getchar(); // Limpa o buffer do enter
@@ -94,8 +92,8 @@ void registrarDocumento()
     d.data[strcspn(d.data, "\n")] = '\0';
 
     printf("Informações:\n");
-    fgets(d.informacoes, 100, stdin);
-    d.informacoes[strcspn(d.informacoes, "\n")] = '\0';
+    fgets(d.detalhes, 100, stdin);
+    d.detalhes[strcspn(d.detalhes, "\n")] = '\0';
 
     if (!validarDocumento(d))
     {
@@ -138,7 +136,7 @@ void registrarDocumento()
         return;
     }
 
-    fprintf(arq, "%d-%s-%s-%s\n", d.tipo, d.nome, d.data, d.informacoes);
+    fprintf(arq, "%d-%s-%s-%s\n", d.tipo, d.nome, d.data, d.detalhes);
     fclose(arq);
 
     printf("Documento salvo em %s\n", Arquivo);
