@@ -12,7 +12,6 @@ typedef struct
 int validarDocumento(Documento d);
 void menu();
 void registrarDocumento();
-//já implementao
 //verificar se passa argumento
 void listarDocumentos(int tipo);
 
