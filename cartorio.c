@@ -319,8 +319,5 @@ void menu()
     } while (opcao != 0);
 
 }
-    } while (opcao != 0);
-
-}
 
 
