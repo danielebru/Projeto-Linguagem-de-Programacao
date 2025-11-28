@@ -56,7 +56,7 @@ void listarDocumentos(int tipo)
         return;
     }
     // lê os documentos do arquivo
-    while (fscanf(arquivo, "%d;%49[^;];%11[^;];%99[^\n]\n",
+    while (fscanf(arquivo, "%d-%49[^-]-%11[^-]-%99[^\n]\n",
                   &lista[quantidade].tipo,
                   lista[quantidade].nome,
                   lista[quantidade].data,
