@@ -5,7 +5,6 @@
 
 int main()
 {
-    printf("CARTÓRIO DIGITAL!");
     menu();
     return 0;
 }
