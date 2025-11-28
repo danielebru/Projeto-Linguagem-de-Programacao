@@ -9,7 +9,8 @@ void listarDocumentos(int tipo)
 {
     FILE *arquivo;// esse ponteiro para arquivo serve para utilizar as funcionalidades de arquivo em c
     char nomeArquivo[20]; // nome do arquivo que será aberto ao listar o determinado tipo doc
-    Documento *lista = NULL; // ponteiro para o vetor dinâmico, ele guardará os docs lidos
+    Documento *lista;
+    lista = NULL; // ponteiro para o vetor dinâmico, ele guardará os docs lidos
     int capacidade = 5;      // o vetor dinâmico lista, vai te ruma capacidade inicial de 10, que dita quantos elementos ele pode armazenar
     int quantidade = 0;      // conta quantos elementos foram colocados no vetor
 
@@ -319,5 +320,6 @@ void menu()
     } while (opcao != 0);
 
 }
+
 
 
