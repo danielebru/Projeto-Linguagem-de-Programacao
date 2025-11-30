@@ -13,5 +13,6 @@ int validarDocumento(Documento d);
 void menu();
 void registrarDocumento();
 void listarDocumentos(int tipo);
+void apagarRegistro(int tipo);
 
 #endif
