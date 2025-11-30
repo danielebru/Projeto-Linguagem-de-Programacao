@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "cartorio.h"
-//comeca-2812
+
 void listarDocumentos(int tipo)
 {
     FILE *arquivo;// esse ponteiro para arquivo serve para utilizar as funcionalidades de arquivo em c
@@ -248,7 +248,7 @@ void registrarDocumento()
 
     printf("Documento salvo em %s\n", Arquivo);
 }
-/* fucnao de  menu antiga
+/* funcao de  menu antiga
 void menu()
 {
     int opcao;
@@ -325,6 +325,7 @@ void menu()
     } while (opcao != 0);
 
 }
+
 
 
 
