@@ -10,7 +10,7 @@ void apagarRegistro(int tipo)
         "nascimento.txt", "obito.txt", "casamentos.txt", "divorcio.txt", "outros.txt"
     };
 
-    // Seleciona o arquivo correto
+    // selleciona o arquivo pra apagar
     switch(tipo)
     {
         case 1: strcpy(nomeArquivo, nomes[0]); break;
@@ -67,7 +67,7 @@ void apagarRegistro(int tipo)
         return;
     }
 
-    // Lista os registros
+    // lista os registros
     printf("\nRegistros encontrados em %s:\n", nomeArquivo);
     for (int i = 0; i < quantidade; i++)
     {
@@ -78,7 +78,7 @@ void apagarRegistro(int tipo)
                lista[i].detalhes);
     }
 
-    // Usuário escolhe qual remover
+    // Usuário escolhe qual quer remover
     printf("\nDigite o número do registro a remover: ");
     scanf("%d", &remover);
 
