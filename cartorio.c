@@ -14,7 +14,7 @@ void listarDocumentos(int tipo)
     int capacidade = 5;      // o vetor dinâmico lista, vai te ruma capacidade inicial de 10, que dita quantos elementos ele pode armazenar
     int quantidade = 0;      // conta quantos elementos foram colocados no vetor
 
-  char nomes[5] [20]={"nascimento.txt", "obito.txt","casamentos.txt" ,"divorcio.txt","outros.txt"};
+  char nomes[5] [20]={"nascimento.txt", "obito.txt","casamento.txt" ,"divorcio.txt","outros.txt"};
   // essse s.c define o nome do arquivo ao usar a funcao strcpy, e qual título.
     switch (tipo)
     {
@@ -320,6 +320,7 @@ void menu()
     } while (opcao != 0);
 
 }
+
 
 
 
