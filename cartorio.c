@@ -305,10 +305,10 @@ void menu()
             listarDocumentos(3);
             break;
         case 5:
-            listarDocumentos(5);
+            listarDocumentos(4);
             break;
         case 6:
-             listarDocumentos(6);
+             listarDocumentos(5);
             break;
         case 0:
             printf("Saindo...\n");
@@ -320,6 +320,7 @@ void menu()
     } while (opcao != 0);
 
 }
+
 
 
 
