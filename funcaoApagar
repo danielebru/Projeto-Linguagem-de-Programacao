@@ -7,7 +7,7 @@ void apagarRegistro(int tipo)
     int remover;
 
     char nomes[5][20] = {
-        "nascimento.txt", "obito.txt", "casamentos.txt", "divorcio.txt", "outros.txt"
+        "nascimento.txt", "obito.txt", "casamento.txt", "divorcio.txt", "outros.txt"
     };
 
     // seleciona o arquivo pra apagar
