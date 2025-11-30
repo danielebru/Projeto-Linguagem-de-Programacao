@@ -1,5 +1,3 @@
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -286,6 +284,7 @@ void menu()
         printf("4-Listar Casamentos.\n");
         printf("5-Listar divórcios.\n");
         printf("6-Listar outros documentos\n");
+        printf("7 - Apagar registro\n");
         printf("0 - Sair do cartório.\n");
     
         printf("Digite a opção desejada:\n");
@@ -310,6 +309,12 @@ void menu()
         case 6:
              listarDocumentos(5);
             break;
+        case 7:
+            printf("Qual categoria deseja apagar?\n");
+            printf("1-Nascimentos\n2-Óbitos\n3-Casamentos\n4-Divórcios\n5-Outros\n");
+            scanf("%d", &opcao);
+            apagarRegistro(opcao);
+            break;
         case 0:
             printf("Saindo...\n");
             break;
@@ -320,6 +325,7 @@ void menu()
     } while (opcao != 0);
 
 }
+
 
 
 
