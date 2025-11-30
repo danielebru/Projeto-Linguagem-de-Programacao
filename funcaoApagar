@@ -10,7 +10,7 @@ void apagarRegistro(int tipo)
         "nascimento.txt", "obito.txt", "casamentos.txt", "divorcio.txt", "outros.txt"
     };
 
-    // selleciona o arquivo pra apagar
+    // seleciona o arquivo pra apagar
     switch(tipo)
     {
         case 1: strcpy(nomeArquivo, nomes[0]); break;
