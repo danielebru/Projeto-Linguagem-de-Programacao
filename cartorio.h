@@ -5,7 +5,6 @@ typedef struct
 {
     int tipo;
     char nome[50];
-    char nome2[50];
     char data[12];
     char detalhes[100];
 } Documento;
