@@ -3,8 +3,6 @@
 #include <string.h>
 #include "cartorio.h"
 
-
-
 void apagarRegistro(int tipo)
 {
     FILE *arquivo, *temp;
@@ -17,7 +15,6 @@ void apagarRegistro(int tipo)
         "nascimento.txt", "obito.txt", "casamento.txt", "divorcio.txt", "outros.txt"
     };
 
-    // seleciona o arquivo pra apagar
     switch(tipo)
     {
         case 1: strcpy(nomeArquivo, nomes[0]); break;
@@ -37,27 +34,24 @@ void apagarRegistro(int tipo)
     lista = malloc(capacidade * sizeof(Documento));
     if (!lista)
     {
-        printf("Erro de alocação!\n");
         fclose(arquivo);
         return;
     }
 
-    // Lê os registros
-    while (fscanf(arquivo, "%d-%49[^-]-%11[^-]-%99[^\n]\n",
+    while (fscanf(arquivo, "%d-%49[^-]-%49[^-]-%11[^-]-%99[^\n]\n",
                   &lista[quantidade].tipo,
                   lista[quantidade].nome,
+                  lista[quantidade].nome2,
                   lista[quantidade].data,
-                  lista[quantidade].detalhes) == 4)
+                  lista[quantidade].detalhes) == 5)
     {
         quantidade++;
-
         if (quantidade >= capacidade)
         {
             capacidade *= 2;
             Documento *tmp = realloc(lista, capacidade * sizeof(Documento));
             if (!tmp)
             {
-                printf("Erro ao realocar!\n");
                 free(lista);
                 fclose(arquivo);
                 return;
@@ -74,35 +68,35 @@ void apagarRegistro(int tipo)
         return;
     }
 
-    // lista os registros
     printf("\nRegistros encontrados em %s:\n", nomeArquivo);
     for (int i = 0; i < quantidade; i++)
     {
-        printf("%d) %s | %s | %s\n",
-               i + 1,
-               lista[i].nome,
-               lista[i].data,
-               lista[i].detalhes);
+        if (lista[i].tipo == 3 || lista[i].tipo == 4)
+        {
+            printf("%d) %s & %s | %s | %s\n",
+                   i + 1, lista[i].nome, lista[i].nome2, lista[i].data, lista[i].detalhes);
+        }
+        else
+        {
+            printf("%d) %s | %s | %s\n",
+                   i + 1, lista[i].nome, lista[i].data, lista[i].detalhes);
+        }
     }
 
-    // Usuário escolhe qual quer remover
     printf("\nDigite o número do registro a remover: ");
     scanf("%d", &remover);
 
     if (remover < 1 || remover > quantidade)
     {
-        printf("Opção inválida!\n");
         free(lista);
         return;
     }
 
-    remover--; // ajusta índice
+    remover--;
 
-    // Reescreve o arquivo sem o item removido
     temp = fopen(nomeArquivo, "w");
     if (!temp)
     {
-        printf("Erro ao abrir arquivo temporário!\n");
         free(lista);
         return;
     }
@@ -111,9 +105,10 @@ void apagarRegistro(int tipo)
     {
         if (i != remover)
         {
-            fprintf(temp, "%d-%s-%s-%s\n",
+            fprintf(temp, "%d-%s-%s-%s-%s\n",
                     lista[i].tipo,
                     lista[i].nome,
+                    lista[i].nome2,
                     lista[i].data,
                     lista[i].detalhes);
         }
@@ -125,132 +120,123 @@ void apagarRegistro(int tipo)
     printf("Registro removido com sucesso!\n");
 }
 
+
 void listarDocumentos(int tipo)
 {
-    FILE *arquivo;// esse ponteiro para arquivo serve para utilizar as funcionalidades de arquivo em c
-    char nomeArquivo[20]; // nome do arquivo que será aberto ao listar o determinado tipo doc
-    Documento *lista;
-    lista = NULL; // ponteiro para o vetor dinâmico, ele guardará os docs lidos
-    int capacidade = 5;      // o vetor dinâmico lista, vai te ruma capacidade inicial de 10, que dita quantos elementos ele pode armazenar
-    int quantidade = 0;      // conta quantos elementos foram colocados no vetor
+    FILE *arquivo;
+    char nomeArquivo[20];
+    Documento *lista = NULL;
+    int capacidade = 5;
+    int quantidade = 0;
 
-  char nomes[5] [20]={"nascimento.txt", "obito.txt","casamento.txt" ,"divorcio.txt","outros.txt"};
-  // essse s.c define o nome do arquivo ao usar a funcao strcpy, e qual título.
+    char nomes[5][20] = {
+        "nascimento.txt", "obito.txt","casamento.txt" ,"divorcio.txt","outros.txt"
+    };
+
     switch (tipo)
     {
-    case 1:
-        strcpy(nomeArquivo, nomes[0]);
-        printf("NASCIMENTOS: \n");
-        break;
-    case 2:
-        strcpy(nomeArquivo, nomes[1]);
-        printf("ÓBITOS: \n");
-        break;
-    case 3:
-        strcpy(nomeArquivo, nomes[2]);
-        printf("CASAMENTOS: \n");
-        break;
-    case 4:
-        strcpy(nomeArquivo, nomes[3]);
-        printf("DIVÓRCIOS: \n");
-        break;
-    default:
-        strcpy(nomeArquivo, nomes[4]);
-        printf("OUTROS DOCUMENTOS: \n");
+    case 1: strcpy(nomeArquivo, nomes[0]); break;
+    case 2: strcpy(nomeArquivo, nomes[1]); break;
+    case 3: strcpy(nomeArquivo, nomes[2]); break;
+    case 4: strcpy(nomeArquivo, nomes[3]); break;
+    default: strcpy(nomeArquivo, nomes[4]);
     }
 
-    // abre o arquivo para leitura ( usando o modo read- r), para visualizarmos os arquivos criados
     arquivo = fopen(nomeArquivo, "r");
-  
-    if (arquivo == NULL) // caso o arquivo nao exista ou nao possa ser acessado, ele vai retornar null, por isso essa logica parecida com alocacao
+    if (arquivo == NULL)
     {
         printf("Nenhum documento encontrado nesta categoria.\n");
         printf("(O arquivo %s ainda não existe)\n", nomeArquivo);
         return;
     }
 
-    lista = (Documento *)malloc(capacidade * sizeof(Documento));  // aloca memória inicial para o vetor de documentos (utiliznado a capacidade inicialmente indicada)
-    if (lista == NULL) //verifica se a alocação foi feita
+    lista = malloc(capacidade * sizeof(Documento));
+    if (!lista)
     {
-        printf("Erro ao fazer alocação!\n");
         fclose(arquivo);
         return;
     }
-    // lê os documentos do arquivo
-    while (fscanf(arquivo, "%d-%49[^-]-%11[^-]-%99[^\n]\n",
+
+    while (fscanf(arquivo, "%d-%49[^-]-%49[^-]-%11[^-]-%99[^\n]\n",
                   &lista[quantidade].tipo,
                   lista[quantidade].nome,
+                  lista[quantidade].nome2,
                   lista[quantidade].data,
-                  lista[quantidade].detalhes) == 4)
+                  lista[quantidade].detalhes) == 5)
     {
         quantidade++;
-
-    
-        if (quantidade >= capacidade)     //usando realloc, pois quando a qtd de arquivos ja registrados, atingir o msm numero da capacidade, no caso 5, 
-                                          //o vetor dinamico que guarda os documentos aumenta
+        if (quantidade >= capacidade)
         {
-            capacidade *= 2; // assim, multiplicando sequencialmente a capacidade por dois, ha um crescimento maior na capacidade de armazenamento do vetor dinâmico
-            Documento *a = (Documento *)realloc(lista, capacidade * sizeof(Documento)); // usar um ponteiro temporário, pois se fizesse lista = realloc(lista, nova alocacao). perde o ponteiro antigo
-
-            if (a == NULL)
+            capacidade *= 2;
+            Documento *a = realloc(lista, capacidade * sizeof(Documento));
+            if (!a)
             {
-                printf("Erro ao fazer a realocação\n");
                 free(lista);
                 fclose(arquivo);
                 return;
             }
-            lista = a; // Atualiza o ponteiro
+            lista = a;
         }
     }
 
     fclose(arquivo);
 
-    // lista os documentos encontrados
     if (quantidade == 0) printf("Nenhum documento registrado.\n");
     else
     {
         printf("Quantidade de documentos registrados: %d\n", quantidade);
-
-       
-        Documento *ptr = lista;  // Usa ponteiro para percorrer o vetor
-
         for (int i = 0; i < quantidade; i++)
         {
             printf("Documento %d:\n", i + 1);
-            printf("  Nome: %s\n", lista[i].nome);// sabe-se que lista [i]. nome == (lista +i) -> nome 
-            printf("  Data: %s\n",  lista[i].data);
-            printf("  Detalhes: %s\n",  lista[i].detalhes);
-    
-
-            ptr++; // Avança o ponteiro para o próximo documento
+            if (lista[i].tipo == 3 || lista[i].tipo == 4)
+            {
+                printf("  Cônjuge 1: %s\n", lista[i].nome);
+                printf("  Cônjuge 2: %s\n", lista[i].nome2);
+            }
+            else
+            {
+                printf("  Nome: %s\n", lista[i].nome);
+            }
+            printf("  Data: %s\n", lista[i].data);
+            printf("  Detalhes: %s\n", lista[i].detalhes);
         }
     }
 
-
-    free(lista);     // libera a memoria alocada primeiramente
+    free(lista);
 }
 
 
-
-//termina
 Documento lerDocumento()
 {
     Documento d;
 
     printf("REGISTRO\n");
-    printf("Tipos disponíveis:\n");
-    printf("  1 - Nascimento\n");
-    printf("  2 - Óbito\n");
-    printf("  3 - Casamento\n");
-    printf("  4 - Divórcio\n");
-    printf("  5 - Outros Documentos\n");
+    printf("1 - Nascimento\n");
+    printf("2 - Óbito\n");
+    printf("3 - Casamento\n");
+    printf("4 - Divórcio\n");
+    printf("5 - Outros\n");
     printf("Digite o tipo do documento (1-5): ");
     scanf("%d", &d.tipo);
-    getchar(); // Limpa o buffer do enter
+    getchar();
 
-    printf("Digite o nome: ");
-    fgets(d.nome, 50, stdin);
-    d.nome[strcspn(d.nome, "\n")] = '\0'; // Remove o \n do final
+    if (d.tipo == 3 || d.tipo == 4)
+    {
+        printf("Nome do cônjuge 1: ");
+        fgets(d.nome, 50, stdin);
+        d.nome[strcspn(d.nome, "\n")] = '\0';
+
+        printf("Nome do cônjuge 2: ");
+        fgets(d.nome2, 50, stdin);
+        d.nome2[strcspn(d.nome2, "\n")] = '\0';
+    }
+    else
+    {
+        printf("Nome: ");
+        fgets(d.nome, 50, stdin);
+        d.nome[strcspn(d.nome, "\n")] = '\0';
+        strcpy(d.nome2, "");
+    }
 
     printf("Digite a data (dd/mm/aaaa): ");
     fgets(d.data, 12, stdin);
@@ -262,45 +248,32 @@ Documento lerDocumento()
 
     return d;
 }
+
 int validarDocumento (Documento d)
 {
-    if (d.tipo < 1 || d.tipo > 5)
+    if (d.tipo < 1 || d.tipo > 5) return 0;
+
+    if (d.tipo == 3 || d.tipo == 4)
     {
-        printf("Tipo inválido.\n");
-        return 0;
+        if (strlen(d.nome) < 2) return 0;
+        if (strlen(d.nome2) < 2) return 0;
+    }
+    else
+    {
+        if (strlen(d.nome) < 2) return 0;
     }
 
-    int tamanhoNome = strlen(d.nome);
-    if (tamanhoNome < 2)
-    {
-        printf("Nome deve possuir no mínimo 2 caracteres.\n");
-        return 0;
-    }
-
-    if (strlen(d.data) != 10)
-    {
-        printf("Data tem que estar no formato dd/mm/aaaa.\n");
-        return 0;
-    }
-
-    if (d.data[2] != '/' || d.data[5] != '/')
-    {
-        printf("Posição incorreta das barras.\n");
-        return 0;
-    }
+    if (strlen(d.data) != 10) return 0;
+    if (d.data[2] != '/' || d.data[5] != '/') return 0;
 
     for (int i = 0; i < 10; i++)
     {
-        if (i == 2 || i == 5)
-            continue;
-if (d.data[i] < '0' || d.data[i] > '9')
-        {
-            printf("Caracteres inválidos.\n");
-            return 0;
-        }
+        if (i == 2 || i == 5) continue;
+        if (d.data[i] < '0' || d.data[i] > '9') return 0;
     }
+
     return 1;
-} 
+}
 
 void registrarDocumento()
 {
@@ -312,9 +285,24 @@ void registrarDocumento()
     printf("Digite o tipo (1-5): ");
     scanf("%d", &d.tipo);
     getchar();
-    printf("Nome: ");
-    fgets(d.nome, 50, stdin);
-    d.nome[strcspn(d.nome, "\n")] = '\0';
+
+    if (d.tipo == 3 || d.tipo == 4)
+    {
+        printf("Nome do cônjuge 1: ");
+        fgets(d.nome, 50, stdin);
+        d.nome[strcspn(d.nome, "\n")] = '\0';
+
+        printf("Nome do cônjuge 2: ");
+        fgets(d.nome2, 50, stdin);
+        d.nome2[strcspn(d.nome2, "\n")] = '\0';
+    }
+    else
+    {
+        printf("Nome: ");
+        fgets(d.nome, 50, stdin);
+        d.nome[strcspn(d.nome, "\n")] = '\0';
+        strcpy(d.nome2, "");
+    }
 
     printf("Data (dd/mm/aaaa): ");
     fgets(d.data, 12, stdin);
@@ -330,73 +318,32 @@ void registrarDocumento()
         return;
     }
 
-    if (d.tipo < 1 || d.tipo > 5)
-    {
-        printf("\nTipo de documento não existente\n");
-        return;
-    }
-
     char Arquivo[20];
 
     switch (d.tipo)
     {
-    case 1:
-        strcpy(Arquivo, "nascimento.txt");
-        break;
-    case 2:
-        strcpy(Arquivo, "obito.txt");
-        break;
-    case 3:
-        strcpy(Arquivo, "casamento.txt");
-        break;
-    case 4:
-        strcpy(Arquivo, "divorcio.txt");
-        break;
-    case 5:
-        strcpy(Arquivo, "outros.txt");
-        break;
+    case 1: strcpy(Arquivo, "nascimento.txt"); break;
+    case 2: strcpy(Arquivo, "obito.txt"); break;
+    case 3: strcpy(Arquivo, "casamento.txt"); break;
+    case 4: strcpy(Arquivo, "divorcio.txt"); break;
+    case 5: strcpy(Arquivo, "outros.txt"); break;
     }
 
     FILE *arq = fopen(Arquivo, "a");
+    if (!arq) return;
 
-    if (!arq)
-    {
-        printf("Não foi possível abrir o arquivo!\n");
-        return;
-    }
+    fprintf(arq, "%d-%s-%s-%s-%s\n",
+            d.tipo, d.nome, d.nome2, d.data, d.detalhes);
 
-    fprintf(arq, "%d-%s-%s-%s\n", d.tipo, d.nome, d.data, d.detalhes);
     fclose(arq);
 
     printf("Documento salvo em %s\n", Arquivo);
 }
-/* funcao de  menu antiga
+
 void menu()
 {
     int opcao;
-    do
-    {
-        printf("\nCARTÓRIO DIGITAL\n");
-        printf("1 - Registrar documento\n");
-        // FAZER O DE SAIR, E DE LISTAR DOCUMENTOS DE CADA TIPO
-        printf("Digite sua opção: ");
-        scanf("%d", &opcao);
-        switch (opcao)
-        {
-        case 1:
-            registrarDocumento();
-            break;
-        case 0:printf("Saindo...\n");
-            break;
-        default:
-            printf("Opção inválida!\n");
-        }
-*/
-void menu()
-{
-    int opcao;
-    //Documento[struct] tipo inicializado no cartorio.h
-    Documento doc;//ve se vamos usar
+
     do
     {
         printf("\nCARTÓRIO DIGITAL\n");
@@ -408,29 +355,18 @@ void menu()
         printf("6-Listar outros documentos\n");
         printf("7 - Apagar registro\n");
         printf("0 - Sair do cartório.\n");
-    
+
         printf("Digite a opção desejada:\n");
         scanf("%d", &opcao);
+
         switch (opcao)
         {
-        case 1:
-            registrarDocumento();
-            break;
-        case 2:
-            listarDocumentos(1);
-            break;
-        case 3:
-             listarDocumentos(2);
-            break;
-        case 4:
-            listarDocumentos(3);
-            break;
-        case 5:
-            listarDocumentos(4);
-            break;
-        case 6:
-             listarDocumentos(5);
-            break;
+        case 1: registrarDocumento(); break;
+        case 2: listarDocumentos(1); break;
+        case 3: listarDocumentos(2); break;
+        case 4: listarDocumentos(3); break;
+        case 5: listarDocumentos(4); break;
+        case 6: listarDocumentos(5); break;
         case 7:
             printf("Qual categoria deseja apagar?\n");
             printf("1-Nascimentos\n2-Óbitos\n3-Casamentos\n4-Divórcios\n5-Outros\n");
@@ -445,13 +381,4 @@ void menu()
         }
 
     } while (opcao != 0);
-
 }
-
-
-
-
-
-
-
-
